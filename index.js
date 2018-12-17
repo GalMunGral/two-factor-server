@@ -2,8 +2,8 @@ const net = require('net');
 
 // Start TCP server
 const server = net.createServer((socket) => {
-  socket.write('Hello\n');
+  socket.write(new Date().toString());
 })
-server.listen(2000, '127.0.0.1', () => {
-  console.log('Listening on 2000');
+server.listen(3000, () => {
+  console.log('Listening on 3000');
 });
