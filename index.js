@@ -2,22 +2,19 @@
 const https = require('https');
 const fetch = require('node-fetch');
 const express = require('express');
+const bodyParser = require('body-parser');
 const requestToken = require('./auth');
 const projectId = 'two-factor-ac76f';
 var accessToken;
 
 const deviceToken = 'd0QbhyO3v_4:APA91bHOqRKYQ1z_oTNhI7ai7xQ0eLJ2Eq5ZJV1PJS94pC6XhUCGPzp_CTovgFIWBabvtFx1Euu2PvGcVzGtCEzA1zxNoNuBaATsraafndy4smPq9h9rTi1r8F_cdkFgRvyJgtWq4bY4';
 const app = express();
+app.use(bodyParser.json());
 
-const createRequestBody = (title, body) => JSON.stringify({
-  message: {
-    token: deviceToken,
-    android: {
-      collapse_key: 'test_group',
-      notification: { title, body, color: '#00ff00' }
-    }
-  }
-});
+app.post('/device-token', (req, res) => {
+  console.log(req.body);
+  res.send('ok');
+})
 
 app.get('/test', (req, res) => {
   if (!accessToken) {
@@ -51,7 +48,15 @@ requestToken().then(token => {
   app.listen(3000, () => console.log('Listening on 8080'));
 })
 
-
+const createRequestBody = (title, body) => JSON.stringify({
+  message: {
+    token: deviceToken,
+    android: {
+      collapse_key: 'test_group',
+      notification: { title, body, color: '#00ff00' }
+    }
+  }
+});
 
 // Start TCP server
 // const server = net.createServer((socket) => {

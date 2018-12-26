@@ -19,8 +19,12 @@
   "homepage": "https://github.com/GalMunGral/two-factor-server#readme",
   "dependencies": {
     "axios": "^0.18.0",
+    "body-parser": "^1.18.3",
     "express": "^4.16.4",
     "googleapis": "^36.0.0",
     "node-fetch": "^2.3.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.16.0"
   }
 }
