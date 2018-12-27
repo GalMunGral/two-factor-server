@@ -9,12 +9,15 @@ const client = http2.connect('https://api.development.push.apple.com:443')
   .on('error', (err) => console.error(err));
 
 const router = express.Router();
-
 router.use(bodyParser.json());
 
+var deviceToken;
+
+router.post('/device-token', (req, res) => {
+  deviceToken = req.body.token; // For testing purpose
+});
+
 router.post('/test', (req, res) => {
-  console.log('Request from: ', req.body);
-  const deviceToken = req.body.token;
   const h2Request = client.request({
     ':method': 'POST',
     ':scheme': 'https',
@@ -34,8 +37,8 @@ router.post('/test', (req, res) => {
   h2Request.end(JSON.stringify({
     'aps': {
       'alert': {
-        'title': 'TEST TITLE',
-        'body': 'test body'
+        'title': '蘭亭集序',
+        'body': '永和九年,嵗在癸丑'
       },
       'badge': 10
     }
