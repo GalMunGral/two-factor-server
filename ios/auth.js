@@ -10,6 +10,7 @@ function generateToken() {
   const token = jwt.sign(payload, privateKey, options);  // string
   console.log(TAG, 'JWT token generated:', token.slice(0,5) + '...' + token.slice(-5));
   console.log(TAG, 'JWT token decoded:', jwt.decode(token, options));
+  return token;
 };
 
 module.exports =  generateToken;
