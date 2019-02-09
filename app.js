@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const android = require('./andoird/routes');
+const android = require('./android/routes');
 const ios = require('./ios/routes');
 
 const app = express();
