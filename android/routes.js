@@ -53,11 +53,6 @@ router.post('/authenticate', (req, res) => {
   .catch(err => console.log(TAG, err));
 });
 
-router.post('/confirm', (req, res) => {
-  console.log(req.body.sessionId);
-  res.send({});
-})
-
 // Initialize
 requestToken().then(token => {
   FCMaccessToken = token;
