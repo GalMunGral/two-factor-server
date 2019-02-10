@@ -1,8 +1,13 @@
 const http2 = require('http2');
 const express = require('express');
 const bodyParser = require('body-parser');
-const generateToken = require('./auth');
-const { Writable } = require('stream');
+const fs = require('fs');
+const jwt = require('jsonwebtoken');
+const privateKey = fs.readFileSync(__dirname + '/AuthKey_PZQK85QBM4.p8');
+const { keyId, teamId } = require('./config');
+const payload = { iss: teamId };
+const options = { algorithm: 'ES256', keyid: keyId };
+const TAG = '[[ios]]:';
 
 const jwtToken = generateToken();
 const client = http2.connect('https://api.development.push.apple.com:443')
@@ -44,5 +49,12 @@ router.post('/test', (req, res) => {
     }
   }));
 });
+
+function generateToken() {
+  const token = jwt.sign(payload, privateKey, options);  // string
+  console.log(TAG, 'JWT token generated:', token.slice(0,5) + '...' + token.slice(-5));
+  console.log(TAG, 'JWT token decoded:', jwt.decode(token, options));
+  return token;
+};
 
 module.exports = router;
