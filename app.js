@@ -30,7 +30,8 @@ app.get('/', (req, res) => {
 });
 
 app.post('/confirm', (req, res) => {
-  console.log(req.body.sessionId);
+  console.log('CONFIRMED')
+  console.log('session:', req.body.sessionId);
   const username = req.body.username;
   const socket = usernameToSocket.get(username);
   socket.emit('success');

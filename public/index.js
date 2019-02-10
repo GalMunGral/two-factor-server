@@ -12,15 +12,15 @@ window.addEventListener('load', () => {
 
   const pushBtn = document.querySelector('#btn_send_push');
   pushBtn.addEventListener('click', e => {
-    // fetch('/android/authenticate', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({
-    //     username: 'retarded'
-    //   })
-    // }).catch(err => {
-    //   console.log(err);
-    // });
+    fetch('/android/authenticate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        username: 'retarded'
+      })
+    }).catch(err => {
+      console.log(err);
+    });
 
     // Also iOS
     fetch('/ios/authenticate', {

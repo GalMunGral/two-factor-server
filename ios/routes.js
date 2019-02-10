@@ -9,24 +9,31 @@ const payload = { iss: teamId };
 const options = { algorithm: 'ES256', keyid: keyId };
 const TAG = '[[ios]]:';
 
-const jwtToken = generateToken();
+const jwtToken = (() => {
+  const token = jwt.sign(payload, privateKey, options);  // string
+  console.log(TAG, 'JWT token generated:', token.slice(0,5) + '...' + token.slice(-5));
+  console.log(TAG, 'JWT token decoded:', jwt.decode(token, options));
+  return token;
+})();
+
 const client = http2.connect('https://api.development.push.apple.com:443')
   .on('error', (err) => console.error(err));
 
 const router = express.Router();
 router.use(bodyParser.json());
 
-var deviceToken;
+var TEST_DEVICE_TOKEN;
 
 router.post('/device-token', (req, res) => {
-  deviceToken = req.body.token; // For testing purpose
+  TEST_DEVICE_TOKEN = req.body.token;
+  console.log(TAG, 'Registered device token');
 });
 
-router.post('/test', (req, res) => {
+router.post('/authenticate', (req, res) => {
   const h2Request = client.request({
     ':method': 'POST',
     ':scheme': 'https',
-    ':path': `/3/device/${deviceToken}`,
+    ':path': `/3/device/${TEST_DEVICE_TOKEN}`,
     'authorization': 'bearer ' + jwtToken,
     'apns-priority': '10',
     'apns-topic': 'edu.gatech.wenqi.twofactor',
@@ -42,19 +49,13 @@ router.post('/test', (req, res) => {
   h2Request.end(JSON.stringify({
     'aps': {
       'alert': {
-        'title': '蘭亭集序',
-        'body': '永和九年,嵗在癸丑'
+        'title': 'Two-Factor Authentication',
+        'body': 'Confirm login request'
       },
-      'badge': 10
+      'badge': 10,
+      'category': 'CONFIRMATION'
     }
   }));
 });
-
-function generateToken() {
-  const token = jwt.sign(payload, privateKey, options);  // string
-  console.log(TAG, 'JWT token generated:', token.slice(0,5) + '...' + token.slice(-5));
-  console.log(TAG, 'JWT token decoded:', jwt.decode(token, options));
-  return token;
-};
 
 module.exports = router;

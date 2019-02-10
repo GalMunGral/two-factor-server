@@ -6,30 +6,20 @@ const key = require('./service-account.json');
 const PROJECT_ID = 'two-factor-ac76f';
 const TAG = '[[android]]:';
 var FCMaccessToken;
+var TEST_DEVICE_TOKEN;
 
 const router = express.Router();
-users = [];
 
 router.post('/device-token', (req, res) => {
   if (!(req.body.token && req.body.username)) {
-    req.send({ error: "Missing username/token" })
+    res.send({ error: "Missing username/token" })
   }
-  users[0] = {
-    username: req.body.username,
-    token: req.body.token
-  };
-  console.log(TAG, `registered user ${req.body.username}'s token`)
+  TEST_DEVICE_TOKEN = req.body.token;
+  console.log(TAG, `Registered device token: ${TEST_DEVICE_TOKEN}`);
   res.send({ result: "OK" });
 })
 
 router.post('/authenticate', (req, res) => {
-  const username = req.body.username;
-  const password = req.body.password;
-  console.log(username, password)
-  if (!username || !password) {
-    res.send({ err: "Incorrect username/password!"});
-    return;
-  }
   if (!FCMaccessToken) {
     res.send('stupid');
   }
@@ -41,7 +31,7 @@ router.post('/authenticate', (req, res) => {
     },
     body: JSON.stringify({
       message: {
-        token: users[0].token,
+        token: TEST_DEVICE_TOKEN,
         data: {
           sessionId: 'test'
         }
@@ -56,7 +46,7 @@ router.post('/authenticate', (req, res) => {
 // Initialize
 requestToken().then(token => {
   FCMaccessToken = token;
-  logToken(token);
+  console.log(TAG, 'Received FCM Token:', token.slice(0,6) + '...' + token.slice(-5));
 });
 
 function requestToken() {
@@ -75,20 +65,6 @@ function requestToken() {
       resolve(tokens.access_token);
     });
   });
-}
-
-// const createRequestBody = (deviceToken, title, body) => JSON.stringify({
-//   message: {
-//     token: deviceToken,
-//     android: {
-//       collapse_key: 'test_group',
-//       notification: { title, body, color: '#00ff00' }
-//     }
-//   }
-// });
-
-function logToken(token) {
-  console.log(TAG, 'Received FCM Token:', token.slice(0,6) + '...' + token.slice(-5));
 }
 
 module.exports = router;
