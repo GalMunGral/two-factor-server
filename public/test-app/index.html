@@ -19,7 +19,7 @@
       window.addEventListener('load', () => {
         const frame = document.querySelector('#login_frame');
         const username = new URL(window.location).searchParams.get('username');
-        const frameURL = `http://galmungral-two-factor/?username=${username}`;
+        const frameURL = `http://galmungral-two-factor.herokuapp.com/?username=${username}`;
         frame.setAttribute('src', frameURL);
       });
       window.addEventListener('message', e => {
