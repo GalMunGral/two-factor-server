@@ -40,4 +40,4 @@ app.post('/confirm', (req, res) => {
 
 // Important: Call listen on HttpServer instead of Express server
 // so that Socket.IO can intercept requests
-http.listen(3000, () => console.log('Listening on 3000'));
+http.listen(process.env.PORT || 80);
